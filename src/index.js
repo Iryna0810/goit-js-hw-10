@@ -32,11 +32,11 @@ function handleSearch(event) {
 function handleCountriesCard(country) {
     const markup = (({ name, capital, population, flags, languages }) => {
         return `<li>
-            <h2><b>Name</b>: ${{ name }}</h2>
+            <h2><b>Name</b>: ${{ this.name.oficial }}</h2>
             <p><b>Capital</b>: ${{capital}}</p>
             <p><b>Population</b>: ${{ population }}</p>
-            <p><b>Flag</b>: ${{flags }}</p>
-            <p><b>Languages</b>: ${{languages}}</p>
+            <p><b>Flag</b>: ${{flags.svg }}</p>
+            <p><b>Languages</b>: ${languages}</p>
           </li>`
       ;
     });
