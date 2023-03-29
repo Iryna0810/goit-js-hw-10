@@ -1,6 +1,7 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
 import { fetchCountries } from './fetchCountries';
+import Notiflix from 'notiflix';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -20,8 +21,7 @@ function handleSearch(event) {
     const searchQuery = event.target.value.trim();
     console.log(searchQuery);
 
-    fetchCountries(searchQuery)
-        .then(handleCountriesCard)
+    fetchCountries(searchQuery).then(handleCountriesCard)
         .catch(handleFetchError);
     
     console.log(fetchCountries(searchQuery));
@@ -30,17 +30,17 @@ function handleSearch(event) {
 
 
 function handleCountriesCard(country) {
-    const markup =  (({ name, capital, population, flags, languages}) => {
+    const markup = (({ name, capital, population, flags, languages }) => {
         return `<li>
-            <h2><b>Name</b>: ${name}</h2>
-            <p><b>Capital</b>: ${capital}</p>
-            <p><b>Population</b>: ${population}</p>
-            <p><b>Flag</b>: ${flags}</p>
-            <p><b>Languages</b>: ${languages}</p>
+            <h2><b>Name</b>: ${{ name }}</h2>
+            <p><b>Capital</b>: ${{capital}}</p>
+            <p><b>Population</b>: ${{ population }}</p>
+            <p><b>Flag</b>: ${{flags }}</p>
+            <p><b>Languages</b>: ${{languages}}</p>
           </li>`
       ;
     });
-
+    // const country = { name, capital, population, flags, languages };
     countryInfo.innerHTML = markup(country);
     console.log(markup(country))
 }
