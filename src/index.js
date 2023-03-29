@@ -1,6 +1,6 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
-import * as fetchCountries from './fetchCountries';
+import { fetchCountries } from './fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -10,10 +10,6 @@ const countryInfo = document.querySelector('.country-info');
 
 searchBox.addEventListener('input', handleSearch);
 
- 
-
-
-
 function handleSearch(event) {
     event.preventDefault();
 
@@ -21,27 +17,20 @@ function handleSearch(event) {
         return;
     }
 
-    const searchQuery = event.currentTarget.value.trim();
+    const searchQuery = event.target.value.trim();
     console.log(searchQuery);
 
     fetchCountries(searchQuery)
         .then(handleCountriesCard)
         .catch(handleFetchError);
+    
+    console.log(fetchCountries(searchQuery));
 
 }
 
-function fetchCountries(countryName) {
-  return fetch(
-    `https://restcountries.com/v3.1/name/${countryName}?fields=name,flags,capital,population,languages`).then((response) => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-        return response.json();
-        }) 
-}
 
-function handleCountriesCard(countries) {
-    const markup = countries.map(({ name, capital, population, flags, languages }) => {
+function handleCountriesCard(country) {
+    const markup =  (({ name, capital, population, flags, languages}) => {
         return `<li>
             <h2><b>Name</b>: ${name}</h2>
             <p><b>Capital</b>: ${capital}</p>
@@ -50,15 +39,16 @@ function handleCountriesCard(countries) {
             <p><b>Languages</b>: ${languages}</p>
           </li>`
       ;
-    })
-        .join("");
-    countryInfo.innerHTML = markup;
+    });
+
+    countryInfo.innerHTML = markup(country);
+    console.log(markup(country))
 }
 
 
 function handleFetchError(error) {
     console.warn(error);
-    return Notiflix.Notify.failure("error");
+    return Notiflix.Notify.failure("Oops, there is no country with that name");
         }
 
 
