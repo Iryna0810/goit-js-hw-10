@@ -9,46 +9,75 @@ const searchBox = document.querySelector('#search-box');
 const countryList = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
 
-searchBox.addEventListener('input', handleSearch);
+searchBox.addEventListener('input', debounce(handleSearch,DEBOUNCE_DELAY) );
 
 function handleSearch(event) {
     event.preventDefault();
 
-    if (event.currentTarget.value === '') {
+    if (event.target.value === '') {
         return;
     }
 
     const searchQuery = event.target.value.trim();
     console.log(searchQuery);
-
-    fetchCountries(searchQuery).then(handleCountriesCard)
-        .catch(handleFetchError);
+    const handleFetchCountries = fetchCountries(searchQuery);
     
+
+    
+
+
+    handleFetchCountries.then(handleCountriesListCard).catch(handleFetchError)
+    
+    handleFetchCountries.then(handleCountriesInfoCard).catch(handleFetchError)
+
+
+    clearField();
+    clearFieldList();
     console.log(fetchCountries(searchQuery));
 
 }
 
 
-function handleCountriesCard(country) {
-    const markup = (({ name, capital, population, flags, languages }) => {
-        return `<li>
-            <h2><b>Name</b>: ${{ this.name.oficial }}</h2>
-            <p><b>Capital</b>: ${{capital}}</p>
-            <p><b>Population</b>: ${{ population }}</p>
-            <p><b>Flag</b>: ${{flags.svg }}</p>
-            <p><b>Languages</b>: ${languages}</p>
-          </li>`
-      ;
-    });
-    // const country = { name, capital, population, flags, languages };
-    countryInfo.innerHTML = markup(country);
-    console.log(markup(country))
+function handleCountriesListCard(country) {
+    if (country.length > 10) {
+    return Notiflix.Notify.info('"Too many matches found. Please enter a more specific name."');
+}
+
+  
+        const markup = country.map(({ name, flags }) => {
+            return `
+        <h2><img class='svg-flag' src="${flags.svg}" alt="" width='40' height='20'><b>   ${name.official}</b><h2>
+        `;
+        }).join('');
+        
+        countryList.insertAdjacentHTML('afterbegin', markup);
+    
+}
+function handleCountriesInfoCard(country) {
+if (country.length > 1) {
+    return;
+}
+    
+    const markupInfo = country.map(({ capital, population, languages }) => {
+       return `<p><b>Capital</b>: ${capital}</p>
+          <p><b>Population</b>: ${population}</p>
+          <p><b>Languages</b>: ${Object.values(languages)}</p>`}).join('');
+    
+    countryInfo.insertAdjacentHTML('afterbegin', markupInfo);
 }
 
 
 function handleFetchError(error) {
     console.warn(error);
     return Notiflix.Notify.failure("Oops, there is no country with that name");
-        }
+}
+        
+function clearField() {
+    countryInfo.innerHTML = '';
+}
+
+    function clearFieldList() {
+    countryList.innerHTML = '';
+}
 
 
