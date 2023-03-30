@@ -38,7 +38,6 @@ function handleCountriesListCard(country) {
     }
     
     if (country.length === 1) {
-        renderCountryListCard(country);
         renderCountryInfoCard(country);
         return;
     }
@@ -47,7 +46,7 @@ function handleCountriesListCard(country) {
 function renderCountryListCard(country) {
     const markup = country.map(({ name, flags }) => {
             return `
-        <h2><img class='svg-flag' src="${flags.svg}" alt="" width='40' height='20'><b>   ${name.official}</b><h2>
+        <h3><img class='svg-flag' src="${flags.svg}" alt="" width='30' height='15'><b>   ${name.official}</b><h3>
         `;
         }).join('');
         
@@ -55,10 +54,12 @@ function renderCountryListCard(country) {
 }
     
 function renderCountryInfoCard(country) {
- const markupInfo = country.map(({ capital, population, languages }) => {
-       return `<p><b>Capital</b>: ${capital}</p>
-          <p><b>Population</b>: ${population}</p>
-          <p><b>Languages</b>: ${Object.values(languages)}</p>`}).join('');
+ const markupInfo = country.map(({ name, flags, capital, population, languages }) => {
+     return `
+     <h2><img class='svg-flag' src="${flags.svg}" alt="" width='40' height='20'><b>   ${name.official}</b><h2>  
+     <p><b>Capital</b>: ${capital}</p>
+     <p><b>Population</b>: ${population}</p>
+     <p><b>Languages</b>: ${Object.values(languages)}</p>`}).join('');
     
     countryInfo.insertAdjacentHTML('afterbegin', markupInfo);
 } 
